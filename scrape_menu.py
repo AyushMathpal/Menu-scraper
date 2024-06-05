@@ -1,4 +1,3 @@
-from urllib import response
 import certifi
 import requests
 from bs4 import BeautifulSoup
