@@ -24,6 +24,12 @@ The results of database are cached so that scraping is not performed redundantly
 
 
 ## Build Command
+
+### Install Dependencies
+```
+pip install -r requirements.txt
+```
+
 ```
 uvicorn main:app --host 0.0.0.0 --port 8080 --reload 
 ```
