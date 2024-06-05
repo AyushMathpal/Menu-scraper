@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,HTTPException
 import uvicorn
 from inputs import MenuSearch
 from scrape_menu import fetch_restaurant_name,run,fetch_menu_from_mongodb
@@ -11,8 +11,9 @@ def read_restaurants(term:MenuSearch):
     if(res==''):
         return {"message":"No restaurant found"}
     else:
-        print(res)
         menu=run(res)
+        if menu is None:
+            raise HTTPException(status_code=404, detail="Blocked by Dineout")
         if "_id" in menu:
             menu["_id"] = str(menu["_id"])
         return menu 

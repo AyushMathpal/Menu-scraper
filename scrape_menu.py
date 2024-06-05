@@ -63,12 +63,15 @@ def run(rest_id):
     if(fetched_menu):
         return fetched_menu
     try:
-        menu_images = soup.find('section' ,{'class':'menu-wrapper'}).find_all('a')
-        print(len(menu_images))
+        menu_images = soup.find('section' ,{'class':'menu-wrapper'})
+        if not menu_images:
+            return None
+        menu_images = menu_images.find_all('a')
+        
         menu={}
         menu['restaurant_name']=restaurant_name
         for i, image in enumerate(menu_images):
-            print(i)
+            
             image_url = image['data-med']
             response = requests.get(image_url)
             file_path=f"menu_images/{restaurant_name}_{i}.jpg"
@@ -78,6 +81,8 @@ def run(rest_id):
             text = pytesseract.image_to_string(Image.open(f"menu_images/{restaurant_name}_{i}.jpg"))
             menu_items = extract_menu_items(text)
             menu[f"page{i+1}"]=menu_items
+            if os.path.exists(file_path):
+                    os.remove(file_path)
         store_in_mongodb(menu)
         fetched_menu=fetch_menu_from_mongodb(restaurant_name)
         return fetched_menu
